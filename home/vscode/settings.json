@@ -1,6 +1,13 @@
 {
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
   "editor.formatOnSave": true,
+  "editor.fontFamily": "ZedMono Nerd Font, Menlo, Monaco, 'Courier New', monospace",
+  "editor.minimap.enabled": false,
   "editor.rulers": [100],
+  "editor.renderWhitespace": "selection",
+  "editor.stickyScroll.enabled": true,
   "files.insertFinalNewline": true,
-  "files.trimTrailingWhitespace": true
+  "files.trimTrailingWhitespace": true,
+  "terminal.integrated.fontFamily": "ZedMono Nerd Font, Menlo, Monaco, 'Courier New', monospace"
 }

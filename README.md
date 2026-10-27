@@ -47,15 +47,19 @@ mise install
 
 This downloads the versions in `~/.config/mise/config.toml`. The current list
 is limited to Python, Node.js, Go, PHP, fzf, GitHub CLI, Starship, and zoxide.
+Starship's config lives alongside the other XDG configs at
+`~/.config/starship.toml`.
 
 ## Included settings
 
 - Zsh history, common navigation/Git shortcuts, Python helpers, and optional
   mise, fzf, zoxide, Starship, and Homebrew plugin integrations
-- Git defaults and aliases, plus a global ignore rule
+- Git defaults and aliases, automatic upstream setup for new branches,
+  remembered conflict resolutions, and a global ignore rule
 - GitHub CLI SSH preference and pull-request checkout alias; credentials and
   host state stay local
-- Ghostty settings: ZedMono Nerd Font at 16pt, block cursor, Catppuccin Mocha
+- Ghostty settings: ZedMono Nerd Font at 16pt, block cursor, Catppuccin Mocha,
+  and hide the mouse pointer while typing
 - A compact Starship prompt for Git state and the language runtimes above
 - Vim defaults and shared VS Code settings
 

@@ -7,6 +7,10 @@
 	ff = only
 [fetch]
 	prune = true
+[push]
+	autoSetupRemote = true
+[rerere]
+	enabled = true
 [alias]
 	st = status --short --branch
 	co = checkout
