@@ -1,9 +1,12 @@
 # Per-machine overrides
 home/.zshrc.local
-home/powershell/Microsoft.PowerShell_profile.local.ps1
+home/.zprofile.local
+home/.gitconfig.local
+home/.config/gh/hosts.yml
+home/.config/mise/config.local.toml
+home/.config/mise/config.override.toml
 
 # Local editor and OS state
 .DS_Store
-Thumbs.db
 *.swp
 *.swo

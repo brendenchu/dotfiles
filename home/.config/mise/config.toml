@@ -1,0 +1,9 @@
+[tools]
+fzf = "0.74.5"
+gh = "2.103.2"
+go = "1.27.3"
+node = "lts"
+php = "8.5.12"
+python = "3.14"
+starship = "1.27.0"
+zoxide = "0.10.0"

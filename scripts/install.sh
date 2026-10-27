@@ -17,13 +17,10 @@ elif [ "$#" -eq 1 ]; then
   exit 2
 fi
 
-case "$(uname -s)" in
-  Darwin|Linux) ;;
-  *)
-    printf 'Unsupported platform. Use install.ps1 on Windows.\n' >&2
-    exit 1
-    ;;
-esac
+if [ "$(uname -s)" != "Darwin" ]; then
+  printf 'This installer currently supports macOS only.\n' >&2
+  exit 1
+fi
 
 link_file() {
   source_path=$1
@@ -66,17 +63,15 @@ link_file() {
   printf 'Linked %s -> %s\n' "$target_path" "$source_path"
 }
 
-case "$(uname -s)" in
-  Darwin)
-    vscode_dir="$HOME_DIR/Library/Application Support/Code/User"
-    ;;
-  Linux)
-    vscode_dir="$HOME_DIR/.config/Code/User"
-    ;;
-esac
+vscode_dir="$HOME_DIR/Library/Application Support/Code/User"
 
 link_file "$ROOT/home/.zshrc" "$HOME_DIR/.zshrc"
+link_file "$ROOT/home/.zprofile" "$HOME_DIR/.zprofile"
 link_file "$ROOT/home/.gitconfig" "$HOME_DIR/.gitconfig"
 link_file "$ROOT/home/.vimrc" "$HOME_DIR/.vimrc"
 link_file "$ROOT/home/starship.toml" "$HOME_DIR/.config/starship.toml"
+link_file "$ROOT/home/.config/mise/config.toml" "$HOME_DIR/.config/mise/config.toml"
+link_file "$ROOT/home/.config/git/ignore" "$HOME_DIR/.config/git/ignore"
+link_file "$ROOT/home/.config/gh/config.yml" "$HOME_DIR/.config/gh/config.yml"
+link_file "$ROOT/home/.config/ghostty/config" "$HOME_DIR/.config/ghostty/config"
 link_file "$ROOT/home/vscode/settings.json" "$vscode_dir/settings.json"

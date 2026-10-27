@@ -1,93 +1,69 @@
 # Dotfiles
 
-Portable personal configuration for macOS, Linux, WSL, and Windows. The shared
-configs are intentionally small; operating-system-specific setup stays in its
-own script or package manifest.
+Personal macOS setup for Zsh, Git, Ghostty, Starship, mise, Vim, and VS Code.
+Other platforms can be added when needed.
 
-## What is included
+## Install
 
-- Zsh configuration for macOS, Linux, and WSL
-- PowerShell profile for native Windows
-- Git aliases and safe defaults, without personal identity settings
-- Vim defaults
-- Shared VS Code settings
-- Optional Starship prompt configuration
-- Opt-in package installation for macOS, Debian/Ubuntu, and Windows with winget
-- Link installers that keep backups of existing files
-
-No system preferences are changed automatically. Terminal-app-specific
-configuration is not included yet because it depends on which terminal you use.
-
-## Install configuration
-
-Clone this repository, then run the installer for your shell:
+Preview the links, then install:
 
 ```sh
 ./scripts/install.sh --dry-run
 ./scripts/install.sh
 ```
 
-The Unix link installer supports macOS and Linux/WSL. It creates symlinks for
-the shared configuration and backs up conflicting files next to their original
-paths using a `.dotfiles-backup-<timestamp>` suffix. If the destination already
-links to the repository file, it is left unchanged. Package installation
-supports macOS with Homebrew and Debian/Ubuntu with apt.
+The installer backs up conflicting files beside their original paths with a
+`.dotfiles-backup-<timestamp>` suffix. It does not install packages or runtimes.
+To undo, remove only links created by the installer and restore any backups.
+The installer does not delete backups.
 
-On Windows, open PowerShell in the repository and run:
+If you have machine-specific Zsh settings, review the backup of your existing
+`.zshrc` or `.zprofile` and move only the needed settings into
+`~/.zshrc.local` or `~/.zprofile.local`. Those files are sourced locally and
+are not tracked here.
 
-```powershell
-.\scripts\install.ps1 -WhatIf
-.\scripts\install.ps1
-```
-
-The Windows installer uses symbolic links. Enable Windows Developer Mode or
-run PowerShell with permission to create symlinks. Existing destinations are
-preserved as timestamped backups. The profile is installed for the current
-PowerShell host.
-
-To undo, remove only the links created by the installer. Restore any backup
-files by moving them back to their original destinations. The installers do not
-delete backups.
-
-## Install packages (optional)
-
-Package installation is separate from linking dotfiles and is never run by
-default.
-
-On macOS, install Homebrew first if needed, then run:
+Keep Git identity in `~/.gitconfig.local`; the tracked Git config includes
+that file when present:
 
 ```sh
-./scripts/install-packages.sh --dry-run
-./scripts/install-packages.sh
+git config --file "$HOME/.gitconfig.local" user.name "Your Name"
+git config --file "$HOME/.gitconfig.local" user.email "you@example.com"
 ```
 
-On Debian/Ubuntu or WSL, run the same commands. The dry run prints the planned
-packages without making changes; the regular run uses `apt-get` and may request
-sudo authorization. Review `packages/apt.txt` first.
+## Packages and runtimes
 
-On Windows, review `packages/windows-winget.json`, then run:
+Review [Brewfile](./Brewfile), then install its small macOS baseline with:
 
-```powershell
-.\scripts\install-packages.ps1 -WhatIf
-.\scripts\install-packages.ps1
+```sh
+brew bundle --file Brewfile
 ```
 
-The manifests provide a small baseline, not a requirement to install every
-listed tool. Remove packages you do not want before running the installer.
+After mise is installed and the shell is restarted, install the pinned tools
+separately when ready:
 
-## Customize
+```sh
+mise install
+```
 
-- Put private or machine-specific Zsh settings in `~/.zshrc.local`.
-- Put private or machine-specific PowerShell settings in
-  `Microsoft.PowerShell_profile.local.ps1` beside the installed profile.
-- Add package choices to the platform manifest you use.
-- Do not add credentials, private keys, tokens, or machine-specific service
-  identities to this repository.
+This downloads the versions in `~/.config/mise/config.toml`. The current list
+is limited to Python, Node.js, Go, PHP, fzf, GitHub CLI, Starship, and zoxide.
+
+## Included settings
+
+- Zsh history, common navigation/Git shortcuts, Python helpers, and optional
+  mise, fzf, zoxide, Starship, and Homebrew plugin integrations
+- Git defaults and aliases, plus a global ignore rule
+- GitHub CLI SSH preference and pull-request checkout alias; credentials and
+  host state stay local
+- Ghostty settings: ZedMono Nerd Font at 16pt, block cursor, Catppuccin Mocha
+- A compact Starship prompt for Git state and the language runtimes above
+- Vim defaults and shared VS Code settings
+
+Install ZedMono Nerd Font for the Ghostty font setting, or change it to a font
+available on your Mac. Machine-specific settings and credentials do not belong
+in this repository.
 
 ## Verify
 
-Check the shell scripts with `sh -n scripts/install.sh` and
-`sh -n scripts/install-packages.sh`. Use dry-run/WhatIf options before linking
-files or installing packages.
-Package installers make system changes and should be run only after reviewing
-their manifests.
+Run `sh -n scripts/install.sh`, `/bin/zsh -n home/.zshrc home/.zprofile`, then
+preview the links with `./scripts/install.sh --dry-run`.

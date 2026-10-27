@@ -1,5 +1,52 @@
-add_newline = false
+format = """
+$username$hostname$directory$git_branch$git_status
+$python$nodejs$golang$php
+$cmd_duration$status$character"""
+
+[username]
+style_user = "bold #f5c2e7"
+style_root = "bold #f38ba8"
+
+[hostname]
+style = "bold #94e2d5"
+
+[directory]
+style = "bold #cba6f7"
+format = "[ $path ]($style)"
+truncation_length = 4
+truncate_to_repo = false
 
 [character]
-success_symbol = "[➜](bold green)"
-error_symbol = "[➜](bold red)"
+success_symbol = "[❯](bold #a6e3a1)"
+error_symbol = "[❯](bold #f38ba8)"
+vimcmd_symbol = "[❮](bold #89b4fa)"
+
+[git_branch]
+format = "[ git:$branch ]($style)"
+style = "bold #89b4fa"
+
+[git_status]
+format = "[ $all_status$ahead_behind ]($style)"
+style = "#f9e2af"
+
+[python]
+format = "[ py $version(\\($virtualenv\\)) ]($style)"
+style = "bold #94e2d5"
+
+[nodejs]
+format = "[ node $version ](bold #a6e3a1)"
+
+[golang]
+format = "[ go $version ](bold #94e2d5)"
+
+[php]
+format = "[ php $version ](bold #f5c2e7)"
+
+[cmd_duration]
+format = "[ took $duration ]($style)"
+style = "bold #f9e2af"
+
+[status]
+disabled = false
+format = "[ exit:$status ]($style)"
+style = "bold #f38ba8"

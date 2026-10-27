@@ -2,6 +2,7 @@
 	defaultBranch = main
 [core]
 	editor = vim
+	excludesFile = ~/.config/git/ignore
 [pull]
 	ff = only
 [fetch]
@@ -13,3 +14,5 @@
 	ci = commit
 	last = log -1 --oneline
 	graph = log --graph --oneline --decorate --all
+[include]
+	path = ~/.gitconfig.local
