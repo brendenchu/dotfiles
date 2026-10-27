@@ -20,5 +20,6 @@
   "zenMode.hideStatusBar": true,
   "zenMode.hideTabs": true,
   "zenMode.restore": true,
-  "zenMode.silentNotifications": true
+  "zenMode.silentNotifications": true,
+  "git.confirmSync": false
 }
