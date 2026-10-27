@@ -61,7 +61,15 @@ Starship's config lives alongside the other XDG configs at
 - Ghostty settings: ZedMono Nerd Font at 16pt, block cursor, Catppuccin Mocha,
   and hide the mouse pointer while typing
 - A compact Starship prompt for Git state and the language runtimes above
-- Vim defaults and shared VS Code settings
+- Vim defaults with focused cursor/scroll behavior, and VS Code settings with
+  automatic Islands light/dark themes, Material file/product icons, and a
+  centered Zen Mode layout
+
+The VS Code Islands theme and Material Icon Theme extensions must be installed
+for their selected appearance to be available. Zen Mode keeps line numbers
+visible while hiding tabs and the status bar; use the built-in Zen Mode command
+when you want a focused layout. Vim keeps the current line highlighted and
+near the center of the screen while scrolling.
 
 Install ZedMono Nerd Font for the Ghostty font setting, or change it to a font
 available on your Mac. Machine-specific settings and credentials do not belong

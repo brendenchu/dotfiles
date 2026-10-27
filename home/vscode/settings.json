@@ -9,5 +9,16 @@
   "editor.stickyScroll.enabled": true,
   "files.insertFinalNewline": true,
   "files.trimTrailingWhitespace": true,
-  "terminal.integrated.fontFamily": "ZedMono Nerd Font, Menlo, Monaco, 'Courier New', monospace"
+  "terminal.integrated.fontFamily": "ZedMono Nerd Font, Menlo, Monaco, 'Courier New', monospace",
+  "window.autoDetectColorScheme": true,
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.productIconTheme": "material-product-icons",
+  "workbench.preferredDarkColorTheme": "Islands Dark",
+  "workbench.preferredLightColorTheme": "Islands Light",
+  "zenMode.centerLayout": true,
+  "zenMode.hideLineNumbers": false,
+  "zenMode.hideStatusBar": true,
+  "zenMode.hideTabs": true,
+  "zenMode.restore": true,
+  "zenMode.silentNotifications": true
 }
