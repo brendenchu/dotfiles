@@ -1,0 +1,15 @@
+[init]
+	defaultBranch = main
+[core]
+	editor = vim
+[pull]
+	ff = only
+[fetch]
+	prune = true
+[alias]
+	st = status --short --branch
+	co = checkout
+	br = branch
+	ci = commit
+	last = log -1 --oneline
+	graph = log --graph --oneline --decorate --all

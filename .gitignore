@@ -1,0 +1,9 @@
+# Per-machine overrides
+home/.zshrc.local
+home/powershell/Microsoft.PowerShell_profile.local.ps1
+
+# Local editor and OS state
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
