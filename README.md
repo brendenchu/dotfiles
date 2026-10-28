@@ -60,6 +60,8 @@ Tool versions and moving version selectors are defined in
 
 - Zsh history, common navigation/Git shortcuts, Python helpers, and optional
   mise, fzf, zoxide, Starship, and Homebrew plugin integrations
+- Docker CLI completions when `~/.docker/completions` exists; generated completion
+  files stay local
 - Adds `~/.local/bin` to `PATH` for user-installed CLI tools
 - Git defaults and aliases, automatic upstream setup for new branches,
   remembered conflict resolutions, and a global ignore rule

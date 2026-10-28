@@ -9,6 +9,10 @@ if (( ${path[(Ie)$HOME/.local/bin]} == 0 )); then
   path=("$HOME/.local/bin" $path)
 fi
 
+if [[ -d "$HOME/.docker/completions" ]]; then
+  fpath=("$HOME/.docker/completions" $fpath)
+fi
+
 autoload -Uz compinit
 compinit
 
