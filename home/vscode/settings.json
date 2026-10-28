@@ -37,5 +37,6 @@
   "gitlens.graph.details.location": "auto",
   "zenMode.showTabs": "single",
   "gitlens.graph.layout": "editor",
-  "redhat.telemetry.enabled": false
+  "redhat.telemetry.enabled": false,
+  "docker.extension.enableComposeLanguageServer": false
 }
