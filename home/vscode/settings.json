@@ -9,7 +9,9 @@
   "editor.letterSpacing": 0,
   "editor.fontLigatures": false,
   "editor.minimap.enabled": false,
-  "editor.rulers": [100],
+  "editor.rulers": [
+    100
+  ],
   "editor.renderWhitespace": "selection",
   "editor.stickyScroll.enabled": true,
   "files.insertFinalNewline": true,
@@ -35,4 +37,5 @@
   "gitlens.graph.details.location": "auto",
   "zenMode.showTabs": "single",
   "gitlens.graph.layout": "editor",
+  "redhat.telemetry.enabled": false
 }

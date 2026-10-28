@@ -1,9 +1,16 @@
 # Dotfiles
 
 Personal macOS setup for Zsh, Git, Ghostty, Starship, mise, Vim, and VS Code.
-Other platforms can be added when needed.
+The installer currently supports macOS only.
+
+[Install](#install) · [Packages and runtimes](#packages-and-runtimes) ·
+[Configuration files](#configuration-files) · [Typography](#typography) ·
+[Verify](#verify)
 
 ## Install
+
+Clone this repository and run these commands from its root. The installer links
+files into your home directory, so keep the checkout at a stable location.
 
 Preview the links, then install:
 
@@ -38,17 +45,16 @@ Review [Brewfile](./Brewfile), then install its small macOS baseline with:
 brew bundle --file Brewfile
 ```
 
-After mise is installed and the shell is restarted, install the pinned tools
+After mise is installed and the shell is restarted, install the configured tools
 separately when ready:
 
 ```sh
 mise install
 ```
 
-This downloads the versions in `~/.config/mise/config.toml`. The current list
-is limited to Python, Node.js, Go, PHP, fzf, GitHub CLI, Starship, and zoxide.
-Starship's config lives alongside the other XDG configs at
-`~/.config/starship.toml`.
+Tool versions and moving version selectors are defined in
+[the mise config](home/.config/mise/config.toml). Review that file before running
+`mise install`; some selectors can resolve to newer releases over time.
 
 ## Included settings
 
@@ -61,29 +67,54 @@ Starship's config lives alongside the other XDG configs at
   host state stay local
 - Ghostty settings: ZedMono Nerd Font at 16pt, block cursor, Catppuccin Mocha,
   and hide the mouse pointer while typing
-- A compact Starship prompt for Git state and the language runtimes above
-- Vim defaults with focused cursor/scroll behavior, and VS Code settings with
+- A compact Starship prompt for Git state and the language runtimes configured in mise
+- Vim defaults with focused cursor/scroll behaviour, and VS Code settings with
   automatic Islands light/dark themes, Material file/product icons, and a
-  centered Zen Mode layout
+  centred Zen Mode layout
 
-The VS Code Islands theme and Material Icon Theme extensions must be installed
-for their selected appearance to be available. Zen Mode keeps line numbers
-visible while hiding tabs and the status bar; use the built-in Zen Mode command
-when you want a focused layout. Vim keeps the current line highlighted and
-near the center of the screen while scrolling.
+The VS Code Islands theme, Material Icon Theme, and Material Product Icons
+extensions must be installed for their selected appearance to be available.
+The config also includes GitLens preferences; install GitLens to use them.
+Zen Mode keeps line numbers and a single tab visible while hiding the status
+bar; use the built-in Zen Mode command when you want a focused layout. Vim
+highlights the current line and requests a five-line margin when scrolling.
 
 Install ZedMono Nerd Font for the Ghostty font setting, or change it to a font
 available on your Mac. Machine-specific settings and credentials do not belong
 in this repository.
 
+## Configuration files
+
+| Configuration | Tracked file |
+| --- | --- |
+| Repository formatting | [`.editorconfig`](.editorconfig) |
+| Zsh interactive shell and login setup | [`.zshrc`](home/.zshrc), [`.zprofile`](home/.zprofile) |
+| Git defaults and global ignore rules | [`.gitconfig`](home/.gitconfig), [ignore](home/.config/git/ignore) |
+| GitHub CLI | [`config.yml`](home/.config/gh/config.yml) |
+| Tool versions | [`mise/config.toml`](home/.config/mise/config.toml) |
+| Shell prompt | [`starship.toml`](home/.config/starship.toml) |
+| Ghostty | [`ghostty/config`](home/.config/ghostty/config) |
+| Vim | [`.vimrc`](home/.vimrc) |
+| VS Code | [`settings.json`](home/vscode/settings.json) |
+
+The [installer](scripts/install.sh) defines the destination paths. VS Code settings
+are linked to the standard macOS Code user profile; other editions and profiles
+require separate setup. The installer does not install editors, fonts or extensions.
+
+Repository formatting uses UTF-8, LF endings, final newlines and two-space
+indentation, with tabs for Git config. Markdown retains trailing spaces for hard
+line breaks. VS Code recommends the EditorConfig extension when you open this
+checkout; other editors need EditorConfig support enabled as well. These rules
+apply to repository files and are not installed as global defaults.
+
 ## Typography
 
-Edit `home/vscode/settings.json` to tune editor and integrated terminal text
-independently. Both use ZedMono Nerd Font with a 16px size and regular (400)
-weight. The editor uses a 1.5 line-height multiplier; the terminal uses 1.2.
-`letterSpacing` adds horizontal space in pixels (currently 0). Set
+Edit [VS Code settings](home/vscode/settings.json) to tune editor and integrated
+terminal text independently. `fontSize` sets the size in pixels, `fontWeight`
+controls weight, `lineHeight` sets the line-height multiplier, and `letterSpacing`
+adds horizontal space in pixels. Set
 `editor.fontLigatures` to `true` to enable ligatures if your font supports them.
-The terminal's bold weight is set separately to 700.
+The terminal's bold weight is controlled by `terminal.integrated.fontWeightBold`.
 
 For terminal Vim, change the host terminal's typography: Ghostty uses
 `font-family` and `font-size` in `home/.config/ghostty/config` (size is in points),
@@ -94,5 +125,12 @@ for its typography controls.
 
 ## Verify
 
-Run `sh -n scripts/install.sh`, `/bin/zsh -n home/.zshrc home/.zprofile`, then
-preview the links with `./scripts/install.sh --dry-run`.
+Check shell syntax and preview the links without changing installed files:
+
+```sh
+sh -n scripts/install.sh
+/bin/zsh -n home/.zshrc
+/bin/zsh -n home/.zprofile
+./scripts/install.sh --dry-run
+git diff --check
+```
