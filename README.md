@@ -54,6 +54,7 @@ Starship's config lives alongside the other XDG configs at
 
 - Zsh history, common navigation/Git shortcuts, Python helpers, and optional
   mise, fzf, zoxide, Starship, and Homebrew plugin integrations
+- Adds `~/.local/bin` to `PATH` for user-installed CLI tools
 - Git defaults and aliases, automatic upstream setup for new branches,
   remembered conflict resolutions, and a global ignore rule
 - GitHub CLI SSH preference and pull-request checkout alias; credentials and
@@ -74,6 +75,22 @@ near the center of the screen while scrolling.
 Install ZedMono Nerd Font for the Ghostty font setting, or change it to a font
 available on your Mac. Machine-specific settings and credentials do not belong
 in this repository.
+
+## Typography
+
+Edit `home/vscode/settings.json` to tune editor and integrated terminal text
+independently. Both use ZedMono Nerd Font with a 16px size and regular (400)
+weight. The editor uses a 1.5 line-height multiplier; the terminal uses 1.2.
+`letterSpacing` adds horizontal space in pixels (currently 0). Set
+`editor.fontLigatures` to `true` to enable ligatures if your font supports them.
+The terminal's bold weight is set separately to 700.
+
+For terminal Vim, change the host terminal's typography: Ghostty uses
+`font-family` and `font-size` in `home/.config/ghostty/config` (size is in points),
+while VS Code uses the `terminal.integrated.*` settings above. Vim inherits these
+settings. VS Code workspace or language settings can override these user defaults.
+See [VS Code terminal appearance](https://code.visualstudio.com/docs/terminal/appearance)
+for its typography controls.
 
 ## Verify
 

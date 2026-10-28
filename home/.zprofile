@@ -1,3 +1,7 @@
+if (( ${path[(Ie)$HOME/.local/bin]} == 0 )); then
+  path=("$HOME/.local/bin" $path)
+fi
+
 if [[ "$(uname -s)" == "Darwin" ]]; then
   if [[ -x /opt/homebrew/bin/brew ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"

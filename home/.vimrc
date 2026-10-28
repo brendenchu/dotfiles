@@ -1,4 +1,6 @@
 set nocompatible
+" Terminal Vim inherits font family, size, weight and spacing from its terminal.
+" Adjust home/.config/ghostty/config or VS Code's terminal.integrated settings.
 set number
 set cursorline
 set scrolloff=5

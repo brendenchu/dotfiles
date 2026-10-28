@@ -5,6 +5,10 @@ setopt APPEND_HISTORY
 setopt HIST_IGNORE_DUPS
 setopt SHARE_HISTORY
 
+if (( ${path[(Ie)$HOME/.local/bin]} == 0 )); then
+  path=("$HOME/.local/bin" $path)
+fi
+
 autoload -Uz compinit
 compinit
 
@@ -33,43 +37,32 @@ fi
 
 alias cz='code "${ZDOTDIR:-$HOME}/.zshrc"'
 alias sz='source "${ZDOTDIR:-$HOME}/.zshrc"'
+alias c='clear'
+alias c.='code .'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias ll='ls -lah'
-alias c='clear'
-alias c.='code .'
 
-alias gs='git status --short --branch'
+alias ga='git add'
+alias gb='git branch -vv'
+alias gc='git commit'
 alias gd='git diff'
 alias gds='git diff --staged'
-alias gl='git log --oneline --graph --decorate -20'
-alias ga='git add'
-alias gc='git commit'
-alias gsw='git switch'
 alias gf='git fetch --all'
+alias gl='git log --oneline --graph --decorate -20'
 alias gpl='git pull --ff-only'
 alias gps='git push'
-alias gb='git branch -vv'
-alias gst='git stash push'
+alias gs='git status --short --branch'
 alias gsl='git stash list'
+alias gst='git stash push'
+alias gsw='git switch'
 
 alias py='python'
 alias serve='python -m http.server --bind 127.0.0.1'
 alias mls='mise ls'
 alias jf='python -m json.tool'
 alias pth='printf "%s\n" "${path[@]}"'
-
-mkcd() {
-  (( $# == 1 )) || { print -u2 'Usage: mkcd <directory>'; return 2; }
-  mkdir -p -- "$1" && builtin cd -- "$1"
-}
-
-grt() {
-  local root
-  root=$(git rev-parse --show-toplevel) || return
-  builtin cd -- "$root"
-}
 
 gn() {
   (( $# == 1 )) || { print -u2 'Usage: gn <branch>'; return 2; }
@@ -82,6 +75,17 @@ gpk() {
   [[ -n "$branches" ]] || return 1
   branch=$(printf '%s\n' "$branches" | fzf --prompt='Git branch > ') || return
   git switch -- "$branch"
+}
+
+grt() {
+  local root
+  root=$(git rev-parse --show-toplevel) || return
+  builtin cd -- "$root"
+}
+
+mkcd() {
+  (( $# == 1 )) || { print -u2 'Usage: mkcd <directory>'; return 2; }
+  mkdir -p -- "$1" && builtin cd -- "$1"
 }
 
 venv() {
