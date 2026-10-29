@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-SCRIPT_DIR=$(CDPATH= cd "$(dirname "$0")" && pwd)
+SCRIPT_DIR=$(CDPATH='' cd "$(dirname "$0")" && pwd)
 ROOT=$(dirname "$SCRIPT_DIR")
 HOME_DIR=${HOME:?HOME must be set}
 DRY_RUN=0
