@@ -1,6 +1,8 @@
-if (( ${path[(Ie)$HOME/.local/bin]} == 0 )); then
-  path=("$HOME/.local/bin" $path)
-fi
+typeset -U path
+path=("$HOME/.local/bin" $path)
+
+export EDITOR=vim
+export VISUAL=vim
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
   if [[ -x /opt/homebrew/bin/brew ]]; then
@@ -10,6 +12,12 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
   elif command -v brew >/dev/null 2>&1; then
     eval "$(brew shellenv)"
   fi
+fi
+
+# Shims expose mise tools to non-interactive login shells (IDE tasks, hooks).
+# Interactive shells replace them with `mise activate` in .zshrc.
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate zsh --shims)"
 fi
 
 if [[ -f "$HOME/.zprofile.local" ]]; then

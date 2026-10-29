@@ -1,13 +1,14 @@
 HISTFILE="${ZDOTDIR:-$HOME}/.zsh_history"
 HISTSIZE=10000
 SAVEHIST=10000
-setopt APPEND_HISTORY
+setopt EXTENDED_HISTORY
 setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_REDUCE_BLANKS
 setopt SHARE_HISTORY
 
-if (( ${path[(Ie)$HOME/.local/bin]} == 0 )); then
-  path=("$HOME/.local/bin" $path)
-fi
+typeset -U path fpath
+path=("$HOME/.local/bin" $path)
 
 if [[ -d "$HOME/.docker/completions" ]]; then
   fpath=("$HOME/.docker/completions" $fpath)
@@ -24,6 +25,11 @@ if command -v fzf >/dev/null 2>&1; then
   eval "$(fzf --zsh)"
 fi
 
+# Initialised after fzf so Atuin owns Ctrl-R; the up arrow keeps normal history.
+if command -v atuin >/dev/null 2>&1; then
+  eval "$(atuin init zsh --disable-up-arrow)"
+fi
+
 if command -v zoxide >/dev/null 2>&1; then
   eval "$(zoxide init zsh)"
 fi
@@ -32,11 +38,10 @@ if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"
 fi
 
-if command -v brew >/dev/null 2>&1; then
-  brew_prefix=$(brew --prefix 2>/dev/null)
-  autosuggestions="$brew_prefix/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-  syntax_highlighting="$brew_prefix/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+if [[ -n "${HOMEBREW_PREFIX-}" ]]; then
+  autosuggestions="$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
   [[ -r "$autosuggestions" ]] && source "$autosuggestions"
+  unset autosuggestions
 fi
 
 alias cz='code "${ZDOTDIR:-$HOME}/.zshrc"'
@@ -74,6 +79,7 @@ gn() {
 }
 
 gpk() {
+  command -v fzf >/dev/null 2>&1 || { print -u2 'gpk: fzf is not installed'; return 1; }
   local branches branch
   branches=$(git for-each-ref --format='%(refname:short)' refs/heads/) || return
   [[ -n "$branches" ]] || return 1
@@ -103,6 +109,9 @@ if [[ -f "$HOME/.zshrc.local" ]]; then
   source "$HOME/.zshrc.local"
 fi
 
-if [[ -r "$syntax_highlighting" ]]; then
-  source "$syntax_highlighting"
+# zsh-syntax-highlighting must be sourced last so it wraps every widget.
+if [[ -n "${HOMEBREW_PREFIX-}" ]]; then
+  syntax_highlighting="$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  [[ -r "$syntax_highlighting" ]] && source "$syntax_highlighting"
+  unset syntax_highlighting
 fi
