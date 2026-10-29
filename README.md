@@ -29,20 +29,41 @@ If you have machine-specific Zsh settings, review the backup of your existing
 `~/.zshrc.local` or `~/.zprofile.local`. Those files are sourced locally and
 are not tracked here.
 
-Keep Git identity in `~/.gitconfig.local`; the tracked Git config includes
-that file when present:
+### Git identity
+
+No identity is tracked here. Keep a general identity in `~/.gitconfig.local`;
+the tracked Git config includes that file when present:
 
 ```sh
 git config --file "$HOME/.gitconfig.local" user.name "Your Name"
 git config --file "$HOME/.gitconfig.local" user.email "you@example.com"
 ```
 
+To use a different email for one GitHub owner, add a conditional include to the
+same local file, after the general identity so it takes precedence (Git 2.36+):
+
+```ini
+[includeIf "hasconfig:remote.*.url:git@github.com:example-org/**"]
+    path = ~/.config/git/example-org.gitconfig
+```
+
+A per-repository `git config user.email` overrides both.
+
 ## Packages and runtimes
 
-Review [Brewfile](./Brewfile), then install its small macOS baseline with:
+Review [Brewfile](./Brewfile), then install it with:
 
 ```sh
 brew bundle --file Brewfile
+```
+
+The Brewfile installs the base CLI tools, the build dependencies mise needs to
+compile PHP, Ghostty, VS Code, the ZedMono Nerd Font, and the VS Code extensions
+these settings refer to. If Ghostty or VS Code are already installed outside
+Homebrew, adopt them first so the casks do not fail:
+
+```sh
+brew install --cask --adopt ghostty visual-studio-code
 ```
 
 After mise is installed and the shell is restarted, install the configured tools
@@ -54,36 +75,42 @@ mise install
 
 Tool versions and moving version selectors are defined in
 [the mise config](home/.config/mise/config.toml). Review that file before running
-`mise install`; some selectors can resolve to newer releases over time.
+`mise install`; some selectors can resolve to newer releases over time. PHP and
+Erlang are compiled from source, so the first install takes a while; PHP
+includes Composer.
+
+Interactive shells use `mise activate`. Login shells also add mise shims to
+`PATH`, so tools are available to non-interactive commands such as editor tasks
+and Git hooks.
 
 ## Included settings
 
 - Zsh history, common navigation/Git shortcuts, Python helpers, and optional
-  mise, fzf, zoxide, Starship, and Homebrew plugin integrations
+  mise, fzf, Atuin, zoxide, Starship, and Homebrew plugin integrations
+- Commands starting with a space are not saved to history
+- Atuin replaces Ctrl-R history search; the up arrow keeps normal Zsh history
 - Docker CLI completions when `~/.docker/completions` exists; generated completion
   files stay local
-- Adds `~/.local/bin` to `PATH` for user-installed CLI tools
+- Adds `~/.local/bin` to `PATH` for user-installed CLI tools and sets `EDITOR`
+  and `VISUAL` to Vim
 - Git defaults and aliases, automatic upstream setup for new branches,
-  remembered conflict resolutions, and a global ignore rule
+  remembered conflict resolutions, `zdiff3` conflict markers, histogram diffs,
+  auto-stash on rebase, branches sorted by recent commits, and global ignore rules
 - GitHub CLI SSH preference and pull-request checkout alias; credentials and
   host state stay local
 - Ghostty settings: ZedMono Nerd Font at 16pt, block cursor, Catppuccin Mocha,
   and hide the mouse pointer while typing
 - A compact Starship prompt for Git state and the language runtimes configured in mise
-- Vim defaults with focused cursor/scroll behaviour, and VS Code settings with
+- Vim defaults with focused cursor/scroll behaviour, smart-case search and
+  persistent undo in `~/.vim/undo`, and VS Code settings with
   automatic Islands light/dark themes, Material file/product icons, and a
   centred Zen Mode layout
 
-The VS Code Islands theme, Material Icon Theme, and Material Product Icons
-extensions must be installed for their selected appearance to be available.
-The config also includes GitLens preferences; install GitLens to use them.
 Zen Mode keeps line numbers and a single tab visible while hiding the status
 bar; use the built-in Zen Mode command when you want a focused layout. Vim
 highlights the current line and requests a five-line margin when scrolling.
 
-Install ZedMono Nerd Font for the Ghostty font setting, or change it to a font
-available on your Mac. Machine-specific settings and credentials do not belong
-in this repository.
+Machine-specific settings and credentials do not belong in this repository.
 
 ## Configuration files
 
@@ -101,7 +128,13 @@ in this repository.
 
 The [installer](scripts/install.sh) defines the destination paths. VS Code settings
 are linked to the standard macOS Code user profile; other editions and profiles
-require separate setup. The installer does not install editors, fonts or extensions.
+require separate setup. Settings changed in the VS Code UI, or by Settings Sync,
+are written through the link into this repository, so review those diffs before
+committing them.
+
+Ghostty also reads `~/Library/Application Support/com.mitchellh.ghostty/config`
+after the linked XDG config, so settings in that file override this repository.
+The installer warns when that file contains any settings.
 
 Repository formatting uses UTF-8, LF endings, final newlines and two-space
 indentation, with tabs for Git config. Markdown retains trailing spaces for hard
@@ -131,8 +164,11 @@ Check shell syntax and preview the links without changing installed files:
 
 ```sh
 sh -n scripts/install.sh
+shellcheck scripts/install.sh
 /bin/zsh -n home/.zshrc
 /bin/zsh -n home/.zprofile
 ./scripts/install.sh --dry-run
 git diff --check
 ```
+
+The same checks run in GitHub Actions on every push to `main` and on pull requests.

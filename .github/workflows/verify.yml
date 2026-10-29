@@ -1,0 +1,34 @@
+name: Verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check shell syntax
+        run: |
+          sh -n scripts/install.sh
+          /bin/zsh -n home/.zshrc
+          /bin/zsh -n home/.zprofile
+
+      - name: Lint installer
+        run: |
+          brew install shellcheck
+          shellcheck scripts/install.sh
+
+      - name: Validate JSON
+        run: |
+          python3 -m json.tool home/vscode/settings.json >/dev/null
+          python3 -m json.tool .vscode/extensions.json >/dev/null
+
+      - name: Preview links
+        run: ./scripts/install.sh --dry-run
+
+      - name: Check whitespace
+        run: git diff --check "$(git hash-object -t tree /dev/null)" HEAD

@@ -1,11 +1,3 @@
-# Per-machine overrides
-home/.zshrc.local
-home/.zprofile.local
-home/.gitconfig.local
-home/.config/gh/hosts.yml
-home/.config/mise/config.local.toml
-home/.config/mise/config.override.toml
-
 # Local editor and OS state
 .DS_Store
 *.swp

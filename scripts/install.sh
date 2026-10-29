@@ -75,3 +75,10 @@ link_file "$ROOT/home/.config/git/ignore" "$HOME_DIR/.config/git/ignore"
 link_file "$ROOT/home/.config/gh/config.yml" "$HOME_DIR/.config/gh/config.yml"
 link_file "$ROOT/home/.config/ghostty/config" "$HOME_DIR/.config/ghostty/config"
 link_file "$ROOT/home/vscode/settings.json" "$vscode_dir/settings.json"
+
+# Ghostty loads this macOS-specific file after the XDG config, so its settings win.
+ghostty_macos_config="$HOME_DIR/Library/Application Support/com.mitchellh.ghostty/config"
+if [ -f "$ghostty_macos_config" ] && grep -Eqv '^[[:space:]]*(#|$)' "$ghostty_macos_config"; then
+  printf 'Warning: %s contains settings that override %s\n' \
+    "$ghostty_macos_config" "$HOME_DIR/.config/ghostty/config" >&2
+fi
