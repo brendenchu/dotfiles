@@ -2,7 +2,6 @@
 	defaultBranch = main
 [core]
 	editor = vim
-	excludesFile = ~/.config/git/ignore
 [pull]
 	ff = only
 [fetch]
@@ -11,12 +10,26 @@
 	autoSetupRemote = true
 [rerere]
 	enabled = true
+[merge]
+	conflictStyle = zdiff3
+[diff]
+	algorithm = histogram
+[rebase]
+	autoStash = true
+	updateRefs = true
+[branch]
+	sort = -committerdate
+[commit]
+	verbose = true
 [alias]
 	st = status --short --branch
 	co = checkout
+	sw = switch
 	br = branch
 	ci = commit
 	last = log -1 --oneline
 	graph = log --graph --oneline --decorate --all
+
+# Identity and machine-specific settings; included last so they win.
 [include]
 	path = ~/.gitconfig.local
