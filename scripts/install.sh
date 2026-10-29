@@ -22,24 +22,62 @@ if [ "$(uname -s)" != "Darwin" ]; then
   exit 1
 fi
 
+# Installer state lives outside the checkout. Each run's backups and log share a run ID.
+STATE_DIR="$HOME_DIR/.local/state/dotfiles"
+run_base=$(date '+%Y%m%d-%H%M%S')
+RUN_ID=$run_base
+suffix=0
+while [ -e "$STATE_DIR/backups/$RUN_ID" ] || [ -e "$STATE_DIR/logs/$RUN_ID.log" ]; do
+  suffix=$((suffix + 1))
+  RUN_ID="$run_base-$suffix"
+done
+BACKUP_DIR="$STATE_DIR/backups/$RUN_ID"
+LOG_FILE=
+
+say() {
+  printf '%s\n' "$1"
+  if [ -n "$LOG_FILE" ]; then
+    printf '%s\n' "$1" >>"$LOG_FILE"
+  fi
+}
+
+warn() {
+  printf '%s\n' "$1" >&2
+  if [ -n "$LOG_FILE" ]; then
+    printf '%s\n' "$1" >>"$LOG_FILE"
+  fi
+}
+
+if [ "$DRY_RUN" -eq 1 ]; then
+  for dir in backups logs; do
+    [ -d "$STATE_DIR/$dir" ] || say "Would create $STATE_DIR/$dir"
+  done
+else
+  mkdir -p "$STATE_DIR/backups" "$STATE_DIR/logs"
+  LOG_FILE="$STATE_DIR/logs/$RUN_ID.log"
+  say "Run $RUN_ID from $ROOT"
+fi
+
 link_file() {
   source_path=$1
   target_path=$2
 
   if [ ! -f "$source_path" ]; then
-    printf 'Missing source file: %s\n' "$source_path" >&2
+    warn "Missing source file: $source_path"
     return 1
   fi
 
   if [ -L "$target_path" ] && [ "$(readlink "$target_path")" = "$source_path" ]; then
-    printf 'Already linked: %s\n' "$target_path"
+    say "Already linked: $target_path"
     return
   fi
 
+  backup_path="$BACKUP_DIR/${target_path#"$HOME_DIR"/}"
+
   if [ "$DRY_RUN" -eq 1 ]; then
-    printf 'Would link %s -> %s\n' "$target_path" "$source_path"
+    say "Would link $target_path -> $source_path"
     if [ -e "$target_path" ] || [ -L "$target_path" ]; then
-      printf 'Would back up existing path: %s\n' "$target_path"
+      say "Would back up $target_path to $backup_path"
     fi
     return
   fi
@@ -48,19 +86,13 @@ link_file() {
   mkdir -p "$parent_dir"
 
   if [ -e "$target_path" ] || [ -L "$target_path" ]; then
-    timestamp=$(date '+%Y%m%d%H%M%S')
-    backup_path="${target_path}.dotfiles-backup-${timestamp}"
-    suffix=0
-    while [ -e "$backup_path" ] || [ -L "$backup_path" ]; do
-      suffix=$((suffix + 1))
-      backup_path="${target_path}.dotfiles-backup-${timestamp}-${suffix}"
-    done
+    mkdir -p "$(dirname "$backup_path")"
     mv "$target_path" "$backup_path"
-    printf 'Backed up %s to %s\n' "$target_path" "$backup_path"
+    say "Backed up $target_path to $backup_path"
   fi
 
   ln -s "$source_path" "$target_path"
-  printf 'Linked %s -> %s\n' "$target_path" "$source_path"
+  say "Linked $target_path -> $source_path"
 }
 
 vscode_dir="$HOME_DIR/Library/Application Support/Code/User"
@@ -79,6 +111,9 @@ link_file "$ROOT/home/vscode/settings.json" "$vscode_dir/settings.json"
 # Ghostty loads this macOS-specific file after the XDG config, so its settings win.
 ghostty_macos_config="$HOME_DIR/Library/Application Support/com.mitchellh.ghostty/config"
 if [ -f "$ghostty_macos_config" ] && grep -Eqv '^[[:space:]]*(#|$)' "$ghostty_macos_config"; then
-  printf 'Warning: %s contains settings that override %s\n' \
-    "$ghostty_macos_config" "$HOME_DIR/.config/ghostty/config" >&2
+  warn "Warning: $ghostty_macos_config contains settings that override $HOME_DIR/.config/ghostty/config"
+fi
+
+if [ -n "$LOG_FILE" ]; then
+  printf 'Log written to %s\n' "$LOG_FILE"
 fi

@@ -9,8 +9,13 @@ The installer currently supports macOS only.
 
 ## Install
 
-Clone this repository and run these commands from its root. The installer links
-files into your home directory, so keep the checkout at a stable location.
+Clone this repository to `~/.dotfiles`. The installer links files from the
+checkout into your home directory, so the links break if the checkout moves.
+
+```sh
+git clone https://github.com/brendenchu/dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
+```
 
 Preview the links, then install:
 
@@ -19,20 +24,44 @@ Preview the links, then install:
 ./scripts/install.sh
 ```
 
-The installer backs up conflicting files beside their original paths with a
-`.dotfiles-backup-<timestamp>` suffix. It does not install packages or runtimes.
-To undo, remove only links created by the installer and restore any backups.
-The installer does not delete backups.
+The installer does not install packages or runtimes.
 
-If you have machine-specific Zsh settings, review the backup of your existing
-`.zshrc` or `.zprofile` and move only the needed settings into
-`~/.zshrc.local` or `~/.zprofile.local`. Those files are sourced locally and
-are not tracked here.
+### Backups and logs
+
+The installer keeps its own state in `~/.local/state/dotfiles`, outside the
+checkout, so `git clean` or a fresh clone cannot remove it:
+
+| Path | Contents |
+| --- | --- |
+| `backups/<run>/` | Files the installer replaced, at their paths relative to your home directory |
+| `logs/<run>.log` | What each install run linked, backed up or skipped |
+
+Each install run has one ID, a timestamp such as `20261028-181338`, shared by
+its backup folder and log. For example, an existing `~/.config/git/ignore` is
+saved as
+`~/.local/state/dotfiles/backups/20261028-181338/.config/git/ignore`.
+The installer never deletes backups.
+
+To undo a run, read its log, remove the links it created and move the files
+from its backup folder back to the same paths under your home directory.
+
+### Local overrides
+
+Machine-specific settings go in untracked files beside the linked ones. The
+tracked configs load them last, so they override the defaults here:
+
+| File | Loaded by |
+| --- | --- |
+| `~/.zshrc.local` | `.zshrc` |
+| `~/.zprofile.local` | `.zprofile` |
+| `~/.gitconfig.local` | `.gitconfig` |
+
+If you have existing Zsh settings, review the backup of your old `.zshrc` or
+`.zprofile` and move only the settings you need into these files.
 
 ### Git identity
 
-No identity is tracked here. Keep a general identity in `~/.gitconfig.local`;
-the tracked Git config includes that file when present:
+No identity is tracked here. Keep a general identity in `~/.gitconfig.local`:
 
 ```sh
 git config --file "$HOME/.gitconfig.local" user.name "Your Name"

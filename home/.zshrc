@@ -14,8 +14,11 @@ if [[ -d "$HOME/.docker/completions" ]]; then
   fpath=("$HOME/.docker/completions" $fpath)
 fi
 
+zsh_cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
+[[ -d "$zsh_cache_dir" ]] || mkdir -p "$zsh_cache_dir"
 autoload -Uz compinit
-compinit
+compinit -d "$zsh_cache_dir/zcompdump"
+unset zsh_cache_dir
 
 if command -v mise >/dev/null 2>&1; then
   eval "$(mise activate zsh)"
