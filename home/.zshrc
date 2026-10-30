@@ -28,6 +28,9 @@ if command -v fzf >/dev/null 2>&1; then
   eval "$(fzf --zsh)"
 fi
 
+# Use Emacs command-line bindings even when EDITOR or VISUAL is vim.
+bindkey -e
+
 # Initialised after fzf so Atuin owns Ctrl-R; the up arrow keeps normal history.
 if command -v atuin >/dev/null 2>&1; then
   eval "$(atuin init zsh --disable-up-arrow)"
